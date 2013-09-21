@@ -1,0 +1,14 @@
+@import url(http://fonts.googleapis.com/css?family=Averia+Serif+Libre);
+
+html, input, textarea { font-family: 'Averia Serif Libre'; }
+html { font-size: 62.5%; }
+
+body { font-size: 1.6rem; }
+
+body { background-color: #fefefe; }
+
+h2 { font-size: 3rem; }
+
+.label { text-align: right }
+
+.error { color: #8B0101; }
