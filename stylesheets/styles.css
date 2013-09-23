@@ -3,11 +3,15 @@
 html, input, textarea { font-family: 'Averia Serif Libre'; }
 html { font-size: 62.5%; }
 
-body { font-size: 1.6rem; }
+body {
+    font-size: 1.6rem;
+    background-color: #fefefe;
+    padding: 2rem;
+}
 
-body { background-color: #fefefe; }
-
-h2 { font-size: 3rem; }
+h1 { font-size: 3.6rem; }
+h2 { font-size: 2.4rem; }
+h3 { font-size: 2.1rem; margin-bottom: 0; }
 
 .label { text-align: right }
 

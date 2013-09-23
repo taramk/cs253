@@ -30,16 +30,34 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
 
 
 def render_str(template, **params):
-    t = jinja_env.get_template(template)
-    return t.render(params)
+        t = jinja_env.get_template(template)
+        return t.render(params)
 
 
 class BaseHandler(webapp2.RequestHandler):
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+
     def render(self, template, **kw):
         self.response.out.write(render_str(template, **kw))
 
-    def write(self, *a, **kw):
-        self.response.out.write(*a, **kw)
+
+class AsciiChan(BaseHandler):
+    def render_ascii(self, title="", art="", error=""):
+        self.render("ascii.html", title=title, art=art, error=error)
+
+    def get(self):
+        self.render_ascii()
+
+    def post(self):
+        title = self.request.get("title")
+        art = self.request.get("art")
+
+        if title and art:
+            self.write("thanks!")
+        else:
+            error = "we need both a title and some artwork!"
+            self.render_ascii(title, art, error=error)
 
 
 class Rot13(BaseHandler):
@@ -114,5 +132,6 @@ class Welcome(BaseHandler):
 
 app = webapp2.WSGIApplication([('/unit2/rot13', Rot13),
                                ('/unit2/signup', Signup),
-                               ('/unit2/welcome', Welcome)],
+                               ('/unit2/welcome', Welcome),
+                               ('/unit3/ascii', AsciiChan)],
                               debug=True)
