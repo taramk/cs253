@@ -1,14 +1,22 @@
-@import url(http://fonts.googleapis.com/css?family=Averia+Serif+Libre);
+@import url(http://fonts.googleapis.com/css?family=Averia+Serif+Libre:400,700);
 
 html, input, textarea { font-family: 'Averia Serif Libre'; }
-html { font-size: 62.5%; }
+html {
+    font-size: 62.5%;
+}
+* {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
 
 body {
     font-size: 1.6rem;
     background-color: #fefefe;
-    padding: 2rem;
+    width: 600px;
+    margin: 0 auto;
 }
 
+h1, h2, h3 { font-weight: 700; }
 h1 { font-size: 3.6rem; }
 h2 { font-size: 2.4rem; }
 h3 { font-size: 2.1rem; margin-bottom: 0; }
@@ -16,3 +24,29 @@ h3 { font-size: 2.1rem; margin-bottom: 0; }
 .label { text-align: right }
 
 .error { color: #8B0101; }
+
+input[type=text] {
+    width: 400px;
+    padding: 2px;
+}
+
+textarea {
+    width: 400px;
+    height: 200px;
+    font-size: 2rem;
+    font-family: monospace;
+}
+
+hr { margin: 20px auto; }
+
+.art + .art { margin-top: 20px; }
+
+.art-title {
+    font-weight: 700;
+    font-size: 2.4rem;
+}
+
+.art-body {
+    margin: 0;
+}
+

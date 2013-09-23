@@ -30,11 +30,11 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
 
 
 def render_str(template, **params):
-        t = jinja_env.get_template(template)
-        return t.render(params)
+    t = jinja_env.get_template(template)
+    return t.render(params)
 
 
-class BaseHandler(webapp2.RequestHandler):
+class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
@@ -42,9 +42,17 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.out.write(render_str(template, **kw))
 
 
-class AsciiChan(BaseHandler):
+class Art(db.Model):
+    title = db.StringProperty(required=True)
+    art = db.TextProperty(required=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+
+
+class Ascii(Handler):
     def render_ascii(self, title="", art="", error=""):
-        self.render("ascii.html", title=title, art=art, error=error)
+        arts = db.GqlQuery("SELECT * FROM Art ORDER BY created DESC ")
+
+        self.render("ascii.html", title=title, art=art, error=error, arts=arts)
 
     def get(self):
         self.render_ascii()
@@ -54,13 +62,16 @@ class AsciiChan(BaseHandler):
         art = self.request.get("art")
 
         if title and art:
-            self.write("thanks!")
+            a = Art(title=title, art=art)
+            a.put()
+
+            self.redirect("ascii")
         else:
-            error = "we need both a title and some artwork!"
+            error = "we need both a title and some artwork"
             self.render_ascii(title, art, error=error)
 
 
-class Rot13(BaseHandler):
+class Rot13(Handler):
     def get(self):
         self.render('rot13-form.html')
 
@@ -86,7 +97,7 @@ def valid_email(email):
     return email and EMAIL_RE.match(email)
 
 
-class Signup(BaseHandler):
+class Signup(Handler):
     def get(self):
         self.render('signup-form.html')
 
@@ -121,7 +132,7 @@ class Signup(BaseHandler):
             self.redirect('/unit2/welcome?username=' + username)
 
 
-class Welcome(BaseHandler):
+class Welcome(Handler):
     def get(self):
         username = self.request.get('username')
         if valid_username(username):
@@ -133,5 +144,5 @@ class Welcome(BaseHandler):
 app = webapp2.WSGIApplication([('/unit2/rot13', Rot13),
                                ('/unit2/signup', Signup),
                                ('/unit2/welcome', Welcome),
-                               ('/unit3/ascii', AsciiChan)],
+                               ('/unit3/ascii', Ascii)],
                               debug=True)
