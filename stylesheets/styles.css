@@ -47,8 +47,8 @@ textarea {
     width: 400px;
     height: 200px;
     font-size: 2rem;
-    font-family: monospace;
 }
+.monospace { font-family: monospace; }
 
 ul { margin-top: 0; }
 

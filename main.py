@@ -42,6 +42,48 @@ class Handler(webapp2.RequestHandler):
         self.response.out.write(render_str(template, **kw))
 
 
+class Posts(db.Model):
+    subject = db.StringProperty(required=True)
+    content = db.TextProperty(required=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+
+
+class Blog(Handler):
+    def get(self):
+        posts = db.GqlQuery("SELECT * FROM Posts ORDER BY created DESC ")
+        self.render("blog.html", posts=posts)
+
+
+class NewPost(Handler):
+    def render_form(self, subject="", content="", error=""):
+        self.render("newpost.html", subject=subject, content=content, error=error)
+
+    def get(self):
+        self.render_form()
+
+    def post(self):
+        subject = self.request.get("subject")
+        content = self.request.get("content")
+
+        if subject and content:
+            p = Posts(subject=subject, content=content)
+            p.put()
+
+            self.redirect("post/?created=" + created)
+        else:
+            error = "We need both a title and content."
+            self.render_form(subject, content, error=error)
+
+
+class Post(Handler):
+    def render_post(self, created):
+        created = self.request.get('created')
+        self.render("post.html", created=created)
+
+    def get(self):
+        self.render_post()
+
+
 class Art(db.Model):
     title = db.StringProperty(required=True)
     art = db.TextProperty(required=True)
@@ -51,7 +93,6 @@ class Art(db.Model):
 class Ascii(Handler):
     def render_ascii(self, title="", art="", error=""):
         arts = db.GqlQuery("SELECT * FROM Art ORDER BY created DESC ")
-
         self.render("ascii.html", title=title, art=art, error=error, arts=arts)
 
     def get(self):
@@ -67,7 +108,7 @@ class Ascii(Handler):
 
             self.redirect("ascii")
         else:
-            error = "we need both a title and some artwork"
+            error = "We need both a title and some artwork."
             self.render_ascii(title, art, error=error)
 
 
@@ -144,5 +185,8 @@ class Welcome(Handler):
 app = webapp2.WSGIApplication([('/unit2/rot13', Rot13),
                                ('/unit2/signup', Signup),
                                ('/unit2/welcome', Welcome),
-                               ('/unit3/ascii', Ascii)],
+                               ('/unit3/ascii', Ascii),
+                               ('/blog', Blog),
+                               ('/blog/newpost', NewPost),
+                               ('/blog/post', Post)],
                               debug=True)
