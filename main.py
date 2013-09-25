@@ -6,7 +6,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@ import os
 import re
 import codecs
 from string import letters
+import random
 
 import webapp2
 import jinja2
@@ -66,22 +67,19 @@ class NewPost(Handler):
         content = self.request.get("content")
 
         if subject and content:
-            p = Posts(subject=subject, content=content)
-            p.put()
-
-            self.redirect("post/?created=" + created)
+            post = Posts(subject=subject, content=content)
+            key = post.put()
+            self.redirect("/blog/%d" % key.id())
         else:
             error = "We need both a title and content."
             self.render_form(subject, content, error=error)
 
 
+# Render a single post
 class Post(Handler):
-    def render_post(self, created):
-        created = self.request.get('created')
-        self.render("post.html", created=created)
-
-    def get(self):
-        self.render_post()
+    def get(self, post_id):
+        post = Posts.get_by_id(int(post_id))
+        self.render("blog.html", posts=[post])
 
 
 class Art(db.Model):
@@ -187,6 +185,5 @@ app = webapp2.WSGIApplication([('/unit2/rot13', Rot13),
                                ('/unit2/welcome', Welcome),
                                ('/unit3/ascii', Ascii),
                                ('/blog', Blog),
-                               ('/blog/newpost', NewPost),
-                               ('/blog/post', Post)],
-                              debug=True)
+                               ('/blog/(\d+)', Post),
+                               ('/blog/newpost', NewPost)], debug=True)
