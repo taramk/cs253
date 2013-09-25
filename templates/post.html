@@ -1,18 +1,10 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 
-<html>
-  <head>
-    <title>Blog</title>
-    <meta charset="UTF-8">
-    <link type="text/css" rel="stylesheet" href="/stylesheets/styles.css">
-  </head>
+{% block content %}
 
-  <body>
+  {% include 'post-format.html' %}
 
-    <h1>Blog Post</h1>
-    <h2>{{post.subject}}</h2>
-    {{post.created}}
-    <div>{{post.content}}</div>
+{% endblock %}
 
-  </body>
-</html>
+
+

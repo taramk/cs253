@@ -1,14 +1,7 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 
-<html>
-  <head>
-    <title>Blog</title>
-    <meta charset="UTF-8">
-    <link type="text/css" rel="stylesheet" href="/stylesheets/styles.css">
+{% block content %}
 
-  </head>
-
-  <body>
     <h1>New blog post</h1>
     <form method="post">
       <label>
@@ -23,6 +16,5 @@
       <br>
       <input type="submit" value="submit">
     </form>
-  </body>
 
-</html>
+{% endblock %}
