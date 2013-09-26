@@ -7,13 +7,26 @@
 </head>
 
 <body>
-  <h1><a href="/blog">CS253 Blog</a></h1>
 
-  <div id="content">
-    {% block content %}
-    {% endblock %}
+  <div id="container">
+
+    <div id="header">
+      <h1><a href="/blog">Tara's Blog</a></h1>
+      <a href="/blog/newpost">+new post</a>
+    </div>
+
+    <div id="body">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <div id="footer">
+      <p>
+        site by taramk
+      </p>
+    </div>
+
   </div>
 
 </body>
-
 </html>
